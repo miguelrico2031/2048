@@ -59,8 +59,13 @@ FetchContent_MakeAvailable(entt)
 # Game
 # =========================================================
 
+file(GLOB_RECURSE GAME_SOURCES
+    CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+)
+
 add_executable(${PROJECT_NAME}
-    src/main.cpp
+    ${GAME_SOURCES}
 )
 
 target_include_directories(${PROJECT_NAME}

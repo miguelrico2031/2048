@@ -1,30 +1,18 @@
-#include <raylib.h>
-#include <entt/entt.hpp>
+#include "core/App.h"
+#include "app/Test.h"
 
 int main()
 {
-    InitWindow(1280, 720, "MyGame");
+    core::App app{
+        .m_Name = "My App",
+        .m_WindowWidth = 1280,
+        .m_WindowHeight = 720,
+    };
 
-    entt::registry registry;
+    app.m_Initializers.push_back(TestInit);
+    app.m_Systems.push_back(TestSystem);
 
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
-
-        ClearBackground(BLACK);
-
-        DrawText(
-            "Hello World",
-            100,
-            100,
-            30,
-            WHITE
-        );
-
-        EndDrawing();
-    }
-
-    CloseWindow();
+    core::Run(app);
 
     return 0;
 }
