@@ -3,5 +3,5 @@
 
 namespace core::input
 {
-	void InputEventSystem(entt::registry& registry, float dt);
+	void InputEventSystem(entt::registry& registry, float);
 }
