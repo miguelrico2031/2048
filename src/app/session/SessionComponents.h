@@ -15,9 +15,6 @@ namespace ttfe::session
 		float m_BoardTilesSize = 0.f;
 		float m_BoardTilesPadding = 0.f;
 		Vector2 m_BoardCenter = { 0.f, 0.f };
-		int m_InitialTilesCount = 0;
 		std::vector<ttfe::board::TileNumber> m_TileNumberBag;
 	};
-
-	struct NewTurnEvent {};
 }

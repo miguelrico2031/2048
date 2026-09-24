@@ -12,19 +12,25 @@ namespace ttfe::board
 		struct Added {};
 	};
 
-	struct CreateTileRequestEvent
+	struct CreateNewTileRequestEvent
 	{
 		ttfe::board::Tile m_Tile;
 	};
 
-	struct DestroyTileRequestEvent
+	struct CreateMergedTileRequestEvent
 	{
-		entt::entity m_TileEntity;
+		ttfe::board::Tile m_Tile;
 	};
 
-	struct MoveTileRequestEvent
+	struct MergingTileComponent
 	{
-		entt::entity m_TileEntity;
-		ttfe::board::Direction m_Direction;
+		entt::entity m_Other;
+	};
+
+	struct DestroyTileRequestComponent {};
+
+	struct UpdateTileCoordsRequestComponent
+	{
+		ttfe::board::Coords m_Coords;
 	};
 }

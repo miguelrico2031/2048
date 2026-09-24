@@ -97,6 +97,14 @@ namespace entt
 		registry.emplace<T>(entity);
 	}
 
+	template<typename T>
+	void clear_temp_components(entt::registry& registry)
+	{
+		auto view = registry.view<T>();
+		for (auto entity : view)
+			registry.remove<T>(entity);
+	}
+
 	template<CObservable T>
 	void clear_observables(entt::registry& registry)
 	{

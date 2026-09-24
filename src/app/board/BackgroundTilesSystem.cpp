@@ -31,9 +31,6 @@ void ttfe::board::BackgroundTilesSystem(entt::registry& registry, float)
 	if (entt::is_empty(view))
 		return;
 	
-	const auto& dataSingleton = entt::get_singleton<core::app::DataSingletonComponent>(registry);
-	Vector2 center{ dataSingleton.m_Data.m_WindowWidth / 2.f, dataSingleton.m_Data.m_WindowHeight / 2.f };
-	
 	const auto& sessionData = view.get<const ttfe::session::DataComponent>(view.front());
 	const int numRows = sessionData.m_BoardRows;
 	const int numCols = sessionData.m_BoardColumns;
@@ -47,7 +44,7 @@ void ttfe::board::BackgroundTilesSystem(entt::registry& registry, float)
 			sprite.m_Texture = c_TexHandle;
 
 			auto& position = entt::add_component<core::transform::PositionComponent>(registry, tileEntity);
-			position.m_Position = ttfe::board::BoardToWorld(row, col, sessionData);
+			position.m_Position = ttfe::board::BoardToWorld({ row, col }, sessionData);
 		}
 	}
 	
