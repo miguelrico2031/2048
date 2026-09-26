@@ -14,11 +14,14 @@ namespace
 		const core::gfx::TexturesSingletonComponent& texturesSingleton,
 		const core::gfx::SpriteComponent& sprite,
 		const core::transform::PositionComponent& position,
-		const core::transform::RotationComponent* rotation
+		const core::transform::RotationComponent* rotation,
+		const core::transform::ScaleComponent* scale
 		)
 	{
 		const Texture2D& texture = texturesSingleton.m_LoadedTextures.at(sprite.m_Texture);
-		const Vector2 origin{ texture.width / 2.0f, texture.height / 2.0f };
+		const Vector2 spriteSize = Vector2Multiply({ static_cast<float>(texture.width), static_cast<float>(texture.height) },
+			scale ? scale->m_Scale : Vector2One());	
+		const Vector2 origin = Vector2Scale(spriteSize, 0.5f);
 		const Rectangle source{
 			0.0f,
 			0.0f,
@@ -28,8 +31,8 @@ namespace
 		const Rectangle destination{
 			position.m_Position.x,
 			position.m_Position.y,
-			static_cast<float>(texture.width),
-			static_cast<float>(texture.height)
+			spriteSize.x,
+			spriteSize.y
 		};
 
 		DrawTexturePro(
@@ -106,7 +109,8 @@ void core::gfx::RenderingSystem(entt::registry& registry, float)
 
 		if (const auto* spriteComponent = registry.try_get<core::gfx::SpriteComponent>(entity))
 		{
-			RenderSprite(texturesSingleton, *spriteComponent, positionComponent, rotationComponent);
+			const auto* scaleComponent = registry.try_get<core::transform::ScaleComponent>(entity);
+			RenderSprite(texturesSingleton, *spriteComponent, positionComponent, rotationComponent, scaleComponent);
 		}
 		if (const auto* textComponent = registry.try_get<core::gfx::TextComponent>(entity))
 		{

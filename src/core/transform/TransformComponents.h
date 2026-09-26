@@ -13,4 +13,9 @@ namespace core::transform
 	{
 		float m_Rotation;
 	};
+
+	struct ScaleComponent
+	{
+		Vector2 m_Scale;
+	};
 }

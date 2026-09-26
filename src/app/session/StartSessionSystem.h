@@ -1,4 +1,5 @@
 #pragma once
+
 #include <entt/entity/fwd.hpp>
 
 namespace ttfe::session

@@ -15,8 +15,6 @@ namespace
 {
 	void StartMovingTiles(entt::registry& registry)
 	{
-		constexpr float SPEED = 1000.f;
-
 		const auto tileView = registry.view<const ttfe::move::MoveTileRequestComponent, const core::transform::PositionComponent>();
 		if (entt::is_empty(tileView))
 			return;
@@ -32,7 +30,7 @@ namespace
 			auto& isMovingComponent = entt::add_component<ttfe::move::IsMovingComponent>(registry, entity);
 			isMovingComponent.m_TargetPosition = ttfe::board::BoardToWorld(moveTileRequest.m_Target, sessionData);
 			Vector2 directionToTarget = Vector2Subtract(isMovingComponent.m_TargetPosition, positionComponent.m_Position);
-			isMovingComponent.m_Movement = Vector2Scale(Vector2Normalize(directionToTarget), SPEED);
+			isMovingComponent.m_Movement = Vector2Scale(Vector2Normalize(directionToTarget), sessionData.m_MoveSpeed);
 			isMovingComponent.m_TargetCoords = moveTileRequest.m_Target;
 		}
 	}

@@ -10,11 +10,14 @@ namespace ttfe::session
 
 	struct DataComponent
 	{
-		int m_BoardRows = 0;
-		int m_BoardColumns = 0;
-		float m_BoardTilesSize = 0.f;
-		float m_BoardTilesPadding = 0.f;
+		int m_BoardRows = 4;
+		int m_BoardColumns = 4;
+		float m_BoardTilesSize = 64.f;
+		float m_BoardTilesPadding = 4.f;
+		float m_MoveSpeed = 1000.f;
+		std::vector<ttfe::board::TileNumber> m_TileNumberBag = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 4 };
 		Vector2 m_BoardCenter = { 0.f, 0.f };
-		std::vector<ttfe::board::TileNumber> m_TileNumberBag;
+		Color m_TileColor = MAROON;
+		Color m_BackgroundTileColor = BROWN;
 	};
 }

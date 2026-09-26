@@ -8,6 +8,7 @@
 #include "core/gfx/GfxComponents.h"
 #include "core/helpers/EnttHelpers.h"
 #include "core/transform/TransformComponents.h"
+#include <cmath>
 #include <entt/entt.hpp>
 #include <raylib.h>
 #include <raymath.h>
@@ -34,6 +35,10 @@ void ttfe::board::BackgroundTilesSystem(entt::registry& registry, float)
 	const auto& sessionData = view.get<const ttfe::session::DataComponent>(view.front());
 	const int numRows = sessionData.m_BoardRows;
 	const int numCols = sessionData.m_BoardColumns;
+
+	const auto& texturesSingleton = entt::get_singleton<core::gfx::TexturesSingletonComponent>(registry);
+	const float scale = sessionData.m_BoardTilesSize / texturesSingleton.m_LoadedTextures.at(c_TexHandle).width;
+
 	for (int row = 0; row < numRows; row++)
 	{
 		for (int col = 0; col < numCols; col++)
@@ -42,9 +47,16 @@ void ttfe::board::BackgroundTilesSystem(entt::registry& registry, float)
 			entt::add_component<ttfe::board::BackgroundTileComponent>(registry, tileEntity);
 			auto& sprite = entt::add_component<core::gfx::SpriteComponent>(registry, tileEntity);
 			sprite.m_Texture = c_TexHandle;
+			sprite.m_Color = sessionData.m_BackgroundTileColor;
 
 			auto& position = entt::add_component<core::transform::PositionComponent>(registry, tileEntity);
 			position.m_Position = ttfe::board::BoardToWorld({ row, col }, sessionData);
+
+			if (std::abs(scale - 1.f) > std::numeric_limits<float>::epsilon())
+			{
+				auto& scaleComponent = entt::add_component<core::transform::ScaleComponent>(registry, tileEntity);
+				scaleComponent.m_Scale = Vector2Scale(Vector2One(), scale);
+			}
 		}
 	}
 	

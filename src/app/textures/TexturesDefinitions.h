@@ -17,8 +17,8 @@ namespace ttfe::textures
 
     constexpr std::array<const char*, static_cast<size_t>(ID::MAX)> c_TexturePaths{
        nullptr,
-       "assets/background_tile.png",
-       "assets/board_tile.png"
+       "assets/board_tile.png",
+       "assets/board_tile.png",
     };
 
     constexpr const char* GetTexturePath(ID id)

@@ -13,10 +13,10 @@ int main()
 {
     core::App app{
         .m_Data{
-            .m_Name = "My App",
+            .m_Name = "2048",
             .m_WindowWidth = 1280,
             .m_WindowHeight = 720,
-            .m_ClearColor = RAYWHITE,
+            .m_ClearColor = BEIGE,
         }
     };
 

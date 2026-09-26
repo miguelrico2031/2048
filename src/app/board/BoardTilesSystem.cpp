@@ -8,6 +8,7 @@
 #include "core/gfx/GfxComponents.h"
 #include "core/helpers/EnttHelpers.h"
 #include "core/transform/TransformComponents.h"
+#include <cmath>
 #include <entt/entt.hpp>
 #include <raylib.h>
 #include <raymath.h>
@@ -18,9 +19,9 @@ namespace
 	constexpr core::gfx::TextureHandle c_TexHandle = ttfe::textures::ToHandle(c_TexID);
 	const char* c_TexPath = ttfe::textures::GetTexturePath(c_TexID);
 
-	void CreateNewTile(entt::registry& registry, const ttfe::session::DataComponent& sessionData, const ttfe::board::Tile& tile)
+	void CreateNewTile(entt::registry& registry, const ttfe::session::DataComponent& sessionData, const ttfe::board::Tile& tile, float scale)
 	{
-		entt::entity entity = registry.create();
+		const entt::entity entity = registry.create();
 
 		auto& tileComponent = entt::add_component<ttfe::board::TileComponent>(registry, entity);
 		tileComponent.m_Tile = tile;
@@ -30,13 +31,19 @@ namespace
 
 		auto& spriteComponent = entt::add_component<core::gfx::SpriteComponent>(registry, entity);
 		spriteComponent.m_Texture = c_TexHandle;
-		spriteComponent.m_Color = LIME;
+		spriteComponent.m_Color = sessionData.m_TileColor;
 
 		auto& textComponent = entt::add_component<core::gfx::TextComponent>(registry, entity);
 		textComponent.m_Text = std::to_string(tileComponent.m_Tile.m_Number);
 
 		auto& renderComponent = entt::add_component<core::gfx::RenderComponent>(registry, entity);
 		renderComponent.m_RenderOrder = 2;
+
+		if(std::abs(scale - 1.f) > std::numeric_limits<float>::epsilon())
+		{
+			auto& scaleComponent = entt::add_component<core::transform::ScaleComponent>(registry, entity);
+			scaleComponent.m_Scale = Vector2Scale(Vector2One(), scale);
+		}
 	}
 
 	void CreateNewTiles(entt::registry& registry, const ttfe::session::DataComponent& sessionData)
@@ -46,15 +53,18 @@ namespace
 		if (newEventView.empty() && mergeEventView.empty())
 			return;
 
+		const auto& texturesSingleton = entt::get_singleton<core::gfx::TexturesSingletonComponent>(registry);
+		const float scale = sessionData.m_BoardTilesSize / texturesSingleton.m_LoadedTextures.at(c_TexHandle).width;
+
 		for (auto eventEntity : newEventView)
 		{
 			const auto& event = newEventView.get<const ttfe::board::CreateNewTileRequestEvent>(eventEntity);
-			CreateNewTile(registry, sessionData, event.m_Tile);
+			CreateNewTile(registry, sessionData, event.m_Tile, scale);
 		}
 		for (auto eventEntity : mergeEventView)
 		{
 			const auto& event = mergeEventView.get<const ttfe::board::CreateMergedTileRequestEvent>(eventEntity);
-			CreateNewTile(registry, sessionData, event.m_Tile);
+			CreateNewTile(registry, sessionData, event.m_Tile, scale);
 		}
 	}
 
